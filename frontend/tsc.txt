@@ -1,0 +1,8 @@
+src/app/articles/[id]/page.tsx(7,56): error TS2307: Cannot find module 'lucide-react' or its corresponding type declarations.
+src/app/articles/[id]/page.tsx(18,13): error TS7006: Parameter 'res' implicitly has an 'any' type.
+src/app/magazines/page.tsx(16,13): error TS7006: Parameter 'res' implicitly has an 'any' type.
+src/lib/axios.ts(1,19): error TS2307: Cannot find module 'axios' or its corresponding type declarations.
+src/lib/axios.ts(8,36): error TS7006: Parameter 'config' implicitly has an 'any' type.
+src/store/useStore.ts(1,24): error TS2307: Cannot find module 'zustand' or its corresponding type declarations.
+src/store/useStore.ts(17,43): error TS7006: Parameter 'set' implicitly has an 'any' type.
+src/store/useStore.ts(19,13): error TS7006: Parameter 'user' implicitly has an 'any' type.

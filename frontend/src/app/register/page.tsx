@@ -1,0 +1,121 @@
+'use client';
+
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import axios from '@/lib/axios';
+import { useStore } from '@/store/useStore';
+import Link from 'next/link';
+import { motion } from 'framer-motion';
+
+export default function RegisterPage() {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  
+  const router = useRouter();
+  const setUser = useStore((state) => state.setUser);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+    
+    try {
+      const res = await axios.post('/auth/register', { name, email, password });
+      setUser(res.data);
+      router.push('/');
+    } catch (err: any) {
+      setError(err.response?.data?.message || 'Failed to register');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-br from-purple-50 to-pink-50 dark:from-zinc-900 dark:to-zinc-950 -z-10" />
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="max-w-md w-full space-y-8 bg-white dark:bg-zinc-900 p-10 rounded-3xl shadow-xl border border-zinc-100 dark:border-zinc-800"
+      >
+        <div>
+          <h2 className="text-center text-3xl font-extrabold text-zinc-900 dark:text-white">
+            Create an Account
+          </h2>
+          <p className="mt-2 text-center text-sm text-zinc-600 dark:text-zinc-400">
+            Join the E-Magazine platform
+          </p>
+        </div>
+        
+        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+          {error && (
+            <div className="bg-red-50 dark:bg-red-900/20 text-red-500 p-3 rounded-lg text-sm text-center">
+              {error}
+            </div>
+          )}
+          <div className="space-y-4">
+            <div>
+              <label htmlFor="name" className="block text-sm font-medium text-zinc-700 dark:text-zinc-300">Full Name</label>
+              <input
+                id="name"
+                name="name"
+                type="text"
+                required
+                className="mt-1 appearance-none relative block w-full px-4 py-3 border border-zinc-300 dark:border-zinc-700 placeholder-zinc-500 text-zinc-900 dark:text-white bg-white dark:bg-zinc-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent sm:text-sm transition-colors"
+                placeholder="John Doe"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
+            </div>
+            <div>
+              <label htmlFor="email" className="block text-sm font-medium text-zinc-700 dark:text-zinc-300">Email address</label>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                required
+                className="mt-1 appearance-none relative block w-full px-4 py-3 border border-zinc-300 dark:border-zinc-700 placeholder-zinc-500 text-zinc-900 dark:text-white bg-white dark:bg-zinc-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent sm:text-sm transition-colors"
+                placeholder="you@example.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
+            <div>
+              <label htmlFor="password" className="block text-sm font-medium text-zinc-700 dark:text-zinc-300">Password</label>
+              <input
+                id="password"
+                name="password"
+                type="password"
+                required
+                className="mt-1 appearance-none relative block w-full px-4 py-3 border border-zinc-300 dark:border-zinc-700 placeholder-zinc-500 text-zinc-900 dark:text-white bg-white dark:bg-zinc-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent sm:text-sm transition-colors"
+                placeholder="••••••••"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </div>
+          </div>
+
+          <div>
+            <button
+              type="submit"
+              disabled={loading}
+              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-xl text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+            >
+              {loading ? 'Creating account...' : 'Sign up'}
+            </button>
+          </div>
+          
+          <div className="text-center text-sm">
+            <span className="text-zinc-600 dark:text-zinc-400">Already have an account? </span>
+            <Link href="/login" className="font-medium text-purple-600 hover:text-purple-500 dark:text-purple-400 dark:hover:text-purple-300">
+              Sign in
+            </Link>
+          </div>
+        </form>
+      </motion.div>
+    </div>
+  );
+}
